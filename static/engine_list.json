@@ -1,0 +1,352 @@
+[
+    {
+        "title": "АИР71A2",
+        "power": 0.75,
+        "rotation_freq": 2805.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР71B2",
+        "power": 1.1,
+        "rotation_freq": 2850.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР80A2",
+        "power": 1.5,
+        "rotation_freq": 2850.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР80B2",
+        "power": 2.2,
+        "rotation_freq": 2850.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР80L2",
+        "power": 3.0,
+        "rotation_freq": 2850.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР100S2",
+        "power": 4.0,
+        "rotation_freq": 2850.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР100L2",
+        "power": 5.5,
+        "rotation_freq": 2850.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР112M2",
+        "power": 7.5,
+        "rotation_freq": 2850.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР132M2",
+        "power": 11.0,
+        "rotation_freq": 2895.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР160S2",
+        "power": 15.0,
+        "rotation_freq": 2910.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.7
+    },
+    {
+        "title": "АИР160M2",
+        "power": 18.5,
+        "rotation_freq": 2910.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.7
+    },
+    {
+        "title": "АИР180S2",
+        "power": 22.0,
+        "rotation_freq": 2919.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.7
+    },
+    {
+        "title": "АИР180M2",
+        "power": 30.0,
+        "rotation_freq": 2925.0,
+        "shift_freq": 3000.0,
+        "delta_t": 2.7
+    },
+    {
+        "title": "АИР71A4",
+        "power": 0.55,
+        "rotation_freq": 1350.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР71B4",
+        "power": 0.75,
+        "rotation_freq": 1395.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР80A4",
+        "power": 1.1,
+        "rotation_freq": 1395.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР80B4",
+        "power": 1.5,
+        "rotation_freq": 1395.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР90L4",
+        "power": 2.2,
+        "rotation_freq": 1410.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР100S4",
+        "power": 3.0,
+        "rotation_freq": 1410.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР100L4",
+        "power": 4.0,
+        "rotation_freq": 1432.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР112M4",
+        "power": 5.5,
+        "rotation_freq": 1440.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР132S4",
+        "power": 7.5,
+        "rotation_freq": 1447.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР132M4",
+        "power": 11.0,
+        "rotation_freq": 1447.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР160S4",
+        "power": 15.0,
+        "rotation_freq": 1455.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.9
+    },
+    {
+        "title": "АИР160M4",
+        "power": 18.5,
+        "rotation_freq": 1455.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.9
+    },
+    {
+        "title": "АИР180S4",
+        "power": 22.0,
+        "rotation_freq": 1462.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.4
+    },
+    {
+        "title": "АИР180M4",
+        "power": 30.0,
+        "rotation_freq": 1470.0,
+        "shift_freq": 1500.0,
+        "delta_t": 2.7
+    },
+    {
+        "title": "АИР71A6",
+        "power": 0.37,
+        "rotation_freq": 915.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР71B6",
+        "power": 0.55,
+        "rotation_freq": 915.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР80A6",
+        "power": 0.75,
+        "rotation_freq": 920.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР80B6",
+        "power": 1.1,
+        "rotation_freq": 920.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР90L6",
+        "power": 1.5,
+        "rotation_freq": 925.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР100L6",
+        "power": 2.2,
+        "rotation_freq": 945.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР112MA6",
+        "power": 3.0,
+        "rotation_freq": 950.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР112MB6",
+        "power": 4.0,
+        "rotation_freq": 950.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР132S6",
+        "power": 5.5,
+        "rotation_freq": 960.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР132M6",
+        "power": 7.5,
+        "rotation_freq": 960.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР160S6",
+        "power": 11.0,
+        "rotation_freq": 970.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.5
+    },
+    {
+        "title": "АИР160M6",
+        "power": 15.0,
+        "rotation_freq": 970.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.6
+    },
+    {
+        "title": "АИР180M6",
+        "power": 18.5,
+        "rotation_freq": 980.0,
+        "shift_freq": 1000.0,
+        "delta_t": 2.4
+    },
+    {
+        "title": "АИРLA8",
+        "power": 0.75,
+        "rotation_freq": 705.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР90LB8",
+        "power": 1.1,
+        "rotation_freq": 715.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР100L8",
+        "power": 1.5,
+        "rotation_freq": 702.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР112MA8",
+        "power": 2.2,
+        "rotation_freq": 709.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР112MB8",
+        "power": 3.0,
+        "rotation_freq": 709.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР132S8",
+        "power": 4.0,
+        "rotation_freq": 716.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР132M8",
+        "power": 5.5,
+        "rotation_freq": 712.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    },
+    {
+        "title": "АИР160S8",
+        "power": 7.5,
+        "rotation_freq": 727.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.4
+    },
+    {
+        "title": "АИР160M8",
+        "power": 11.0,
+        "rotation_freq": 727.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.4
+    },
+    {
+        "title": "АИР180M8",
+        "power": 15.0,
+        "rotation_freq": 731.0,
+        "shift_freq": 750.0,
+        "delta_t": 2.2
+    }
+]
