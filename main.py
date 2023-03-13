@@ -1,6 +1,4 @@
-from math import pi
-
-from config import FILEPATHS
+from config.filepaths import FILEPATHS
 from services.static_data import StaticData
 from services.calculations import Calculations
 
@@ -10,6 +8,7 @@ def main():
 		scheme_data_filepath=FILEPATHS.SCHEME_DATA,
 		engine_list_filepath=FILEPATHS.ENGINE_LIST,
 		engine_constant_values_filepath=FILEPATHS.ENGINES_CONSTANT_VALUES,
+		default_gear_ratios=FILEPATHS.DEFAULT_GEAR_RATIOS,
 	)
 	d, f, v = map(float, input("Введите диаметр звёздочки, тяговое усиление на цепи и скорость: ").split())
 	calculations = Calculations(d, f, v)
