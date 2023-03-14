@@ -1,3 +1,8 @@
+from services.libraries import LibrariesService
+
+if not LibrariesService.all_required_libraries_is_installed():
+	exit()
+
 from rich.console import Console
 from rich.theme import Theme
 
@@ -5,6 +10,7 @@ from config.filepaths import FILEPATHS
 from config.console import ConsoleColors
 from services.static_data import StaticData
 from services.calculations import Calculations
+
 
 console = Console(theme=Theme({
 	'repr.number': 'yellow',
