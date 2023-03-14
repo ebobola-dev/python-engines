@@ -1,5 +1,5 @@
 import pyglet
-from tkinter import Tk, font
+from tkinter import Tk
 from tkinter.ttk import *
 pyglet.font.add_file('fonts/helvetica.otf')
 

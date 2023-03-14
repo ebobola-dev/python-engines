@@ -10,7 +10,7 @@ class Engine:
 		self.title = title						#* ENGINE NAME
 		self.power = power						#* ENGINE POWER
 		self.rotation_freq = rotation_freq		#* ENGINE ROTATION FREQ
-		self.shaft_freq = shaft_freq			#* shaft ROTATION FREQ
+		self.shaft_freq = shaft_freq			#* SHAFT ROTATION FREQ
 		self.delta_t = delta_t					#* Tmax / Tmin
 
 	def __repr__(self):

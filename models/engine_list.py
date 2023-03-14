@@ -23,4 +23,7 @@ class EngineList:
 
 	def get_engine_list(self):
 		return self._engine_list[:]
+
+	def get_engine_list_len(self):
+		return len(self._engine_list)
 	#* -----------------------------------
