@@ -102,4 +102,4 @@ class Calculations:
 		table.add_row("3", str(round(w3, 2)), str(round(n3, 2)), str(round(p3, 2)), str(round(t3, 2)), f"u* з.п = {round(required_dgr, 2)}")
 		table.add_row("4 (раб.вал)", str(round(w4, 2)), str(round(n4, 2)), str(round(p4, 2)), str(round(t4, 2)))
 		ConsoleService.console.print(table)
-		a = 1
+		a = 2
