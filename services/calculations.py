@@ -7,6 +7,8 @@ from services.static_data import StaticData
 from services.console import ConsoleService
 from config.console import ConsoleColors
 
+from utils.json_rw import JsonUtil
+
 
 class Calculations:
 	def __init__(self, scheme_number: int, d: float, f: float, v: float):
@@ -69,25 +71,25 @@ class Calculations:
 		gear_ratio_OCD = total_gear_ratio / required_dgr
 		ConsoleService.console.print(f'Открытое чего-то там передаточное число = {round(gear_ratio_OCD, 2)}', style=ConsoleColors.MAIN)
 		#* ------------------------------------------------------------------------
-		w1 = w_em
-		w2 = w1
-		w3 = w2 / required_dgr
-		w4 = w3 / gear_ratio_OCD
+		self._w1 = w_em
+		self._w2 = self._w1
+		self._w3 = self._w2 / required_dgr
+		self._w4 = self._w3 / gear_ratio_OCD
 		#* ------------------------------------------------------------------------
-		n1 = engine_rotation_freq
-		n2 = n1
-		n3 = (30 * w3) / pi
-		n4 = (30 * w4) / pi
+		self._n1 = engine_rotation_freq
+		self._n2 = self._n1
+		self._n3 = (30 * self._w3) / pi
+		self._n4 = (30 * self._w4) / pi
 		#* ------------------------------------------------------------------------
-		p1 = self._current_power
-		p2 = p1 * self._current_scheme.CPD.couplings * self._current_scheme.CPD.bearing
-		p3 = p2 * self._current_scheme.CPD.bearing * self._current_scheme.CPD.CSG
-		p4 = p3 * self._current_scheme.CPD.OCD * self._current_scheme.CPD.bearing
+		self._p1 = self._current_power
+		self._p2 = self._p1 * self._current_scheme.CPD.couplings * self._current_scheme.CPD.bearing
+		self._p3 = self._p2 * self._current_scheme.CPD.bearing * self._current_scheme.CPD.CSG
+		self._p4 = self._p3 * self._current_scheme.CPD.OCD * self._current_scheme.CPD.bearing
 		#* ------------------------------------------------------------------------
-		t1 = p1 / w1
-		t2 = p2 / w2
-		t3 = p3 / w3
-		t4 = p4 / w4
+		self._t1 = self._p1 / self._w1
+		self._t2 = self._p2 / self._w2
+		self._t3 = self._p3 / self._w3
+		self._t4 = self._p4 / self._w4
 		#* ------------------------------------------------------------------------
 		print()
 		table = Table(title="Результаты кинематического расчёта привода")
@@ -97,9 +99,26 @@ class Calculations:
 		table.add_column("P, кВт", justify='center')
 		table.add_column("T, kH * м", justify='center')
 		table.add_column("Передаточные числа", justify='center', style=ConsoleColors.MAIN, header_style=ConsoleColors.MAIN)
-		table.add_row("1", str(round(w1, 2)), str(round(n1, 2)), str(round(p1, 2)), str(round(t1, 2)), f"u* о.п = {round(gear_ratio_OCD, 2)}")
-		table.add_row("2", str(round(w2, 2)), str(round(n2, 2)), str(round(p2, 2)), str(round(t2, 2)))
-		table.add_row("3", str(round(w3, 2)), str(round(n3, 2)), str(round(p3, 2)), str(round(t3, 2)), f"u* з.п = {round(required_dgr, 2)}")
-		table.add_row("4 (раб.вал)", str(round(w4, 2)), str(round(n4, 2)), str(round(p4, 2)), str(round(t4, 2)))
+		table.add_row("1", str(round(self._w1, 2)), str(round(self._n1, 2)), str(round(self._p1, 2)), str(round(self._t1, 2)), f"u* о.п = {round(gear_ratio_OCD, 2)}")
+		table.add_row("2", str(round(self._w2, 2)), str(round(self._n2, 2)), str(round(self._p2, 2)), str(round(self._t2, 2)))
+		table.add_row("3", str(round(self._w3, 2)), str(round(self._n3, 2)), str(round(self._p3, 2)), str(round(self._t3, 2)), f"u* з.п = {round(required_dgr, 2)}")
+		table.add_row("4 (раб.вал)", str(round(self._w4, 2)), str(round(self._n4, 2)), str(round(self._p4, 2)), str(round(self._t4, 2)))
 		ConsoleService.console.print(table)
-		a = 2
+		print()
+
+	def gear_connection(self):
+		coefs = JsonUtil.read("static/coefs.json")
+		t1_gear = self._t2 * (10 ** 6)
+		t2_gear = self._t3 * (10 ** 6)
+		w1_gear = self._w2
+		w2_gear = self._w3
+		n1_gear = self._n2
+		n2_gear = self._n3
+
+		u12 = n1_gear / n2_gear
+		d1_billet = 3 * ((t2_gear / (coefs.get("c") * (u12 ** 2))) ** (1 / 3))
+		d2_billet = d1_billet * u12
+
+		ConsoleService.console.print(f"d1 загот. = {round(d1_billet, 2)}", style=ConsoleColors.MAIN)
+		ConsoleService.console.print(f"d2 загот. = {round(d2_billet, 2)}", style=ConsoleColors.MAIN)
+		

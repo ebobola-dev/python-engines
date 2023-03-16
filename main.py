@@ -30,6 +30,7 @@ def main():
 	calculations = Calculations(scheme_number=10, d=d, f=f, v=v)
 	calculations.find_required_engine()
 	calculations.kinematic_drive()
+	calculations.gear_connection()
 
 if __name__ == '__main__':
 	main()
