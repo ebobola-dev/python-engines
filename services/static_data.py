@@ -6,6 +6,7 @@ from rich.table import Table, box
 from config.console import ConsoleColors, ProgressSleepTimes
 from utils.json_rw import JsonUtil
 from models.engine_list import EngineList
+from models.scheme_data import Scheme
 
 from services.console import ConsoleService
 
@@ -27,8 +28,7 @@ class DefaultGearRatios:
 class StaticData:
 	initialization_status: InitializationStatus = InitializationStatus.NotInitialized
 	engine_list: EngineList | None = None
-	CDP: dict | None = None
-	GR: dict | None = None
+	schemes: tuple[Scheme] | None = None
 	DGR: DefaultGearRatios | None = None
 
 	@staticmethod
@@ -85,9 +85,10 @@ class StaticData:
 				progress.update(read_scheme_data_task, advance=1)
 				sleep(ProgressSleepTimes.SCHEME)
 			try:
-				scheme_10_data: dict | None = JsonUtil.read(filepath=scheme_data_filepath)
-				StaticData.CDP: dict = scheme_10_data.get('CPD')
-				StaticData.GR: dict = scheme_10_data.get('GR')
+				schemes_json_list: tuple[dict] | None = tuple(JsonUtil.read(filepath=scheme_data_filepath))
+				StaticData.schemes = tuple(
+					Scheme.from_json(scheme_data_json) for scheme_data_json in schemes_json_list
+				)
 			except Exception as scheme_init_error:
 				ConsoleService.console.print(f'Произошла ошибка при чтении данных схем из файла: {scheme_init_error}', style=ConsoleColors.ERROR)
 				StaticData.initialization_status = InitializationStatus.InitializedWithCriticalProblem
@@ -105,15 +106,17 @@ class StaticData:
 			scheme_table.add_column('η п.п', justify='center')
 			scheme_table.add_column('u з.п', justify='center')
 			scheme_table.add_column('u о.п', justify='center')
-			scheme_table.add_row(
-				"10",
-				str(StaticData.CDP.get('CSG')),
-				str(StaticData.CDP.get('OCD')),
-				str(StaticData.CDP.get('bearing')),
-				str(StaticData.CDP.get('couplings')),
-				str(StaticData.GR.get('CSG')),
-				str(StaticData.GR.get('OCD')),
-			)
+
+			for scheme in StaticData.schemes:
+				scheme_table.add_row(
+					str(scheme.number),
+					str(scheme.CPD.CSG),
+					str(scheme.CPD.OCD),
+					str(scheme.CPD.bearing),
+					str(scheme.CPD.couplings),
+					str(scheme.GR.CSG),
+					str(scheme.GR.OCD),
+				)
 			ConsoleService.console.print(scheme_table)
 
 			#* -------------------------------------------------------

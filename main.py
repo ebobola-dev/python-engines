@@ -1,12 +1,12 @@
-from services.libraries import LibrariesService
+from utils.libraries import LibrariesUtil
 
-if not LibrariesService.all_required_libraries_is_installed():
+if not LibrariesUtil.all_required_libraries_is_installed():
 	exit()
 
 
 from config.filepaths import FILEPATHS
 from config.console import ConsoleColors
-from services.args import ArgsService
+from utils.args import ArgsUtil
 from services.static_data import StaticData
 from services.calculations import Calculations
 from services.console import ConsoleService
@@ -21,13 +21,13 @@ def main():
 		default_gear_ratios=FILEPATHS.DEFAULT_GEAR_RATIOS,
 	)
 	print()
-	d, f, v = ArgsService.try_read()
+	d, f, v = ArgsUtil.try_read()
 	if d is not None:
 		ConsoleService.console.print(f"Обнаружены значения из параметров запуска: {d} kH, {f} м/с, {v} м", style=ConsoleColors.SUCCESS)
 	else:
 		d, f, v = map(float, input("Введите диаметр звёздочки, тяговое усиление на цепи и скорость: ").split())
 	print()
-	calculations = Calculations(d, f, v)
+	calculations = Calculations(scheme_number=10, d=d, f=f, v=v)
 	calculations.find_required_engine()
 	calculations.kinematic_drive()
 

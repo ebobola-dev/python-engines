@@ -1,6 +1,5 @@
 from math import pi
 from rich.table import Table
-from rich.theme import Theme
 
 from models.engine import Engine
 from services.static_data import StaticData
@@ -9,7 +8,8 @@ from config.console import ConsoleColors
 
 
 class Calculations:
-	def __init__(self, d: float, f: float, v: float):
+	def __init__(self, scheme_number: int, d: float, f: float, v: float):
+		self._current_scheme = tuple(filter(lambda scheme: scheme.number == scheme_number, StaticData.schemes))[0]
 		self._d = d
 		self._f = f
 		self._v = v
@@ -17,12 +17,12 @@ class Calculations:
 	#? Подбираем электродвигатель
 	def find_required_engine(self):
 		self._p_rv = self._f * self._v
-		ge = StaticData.CDP.get('couplings') * StaticData.CDP.get('OCD') * StaticData.CDP.get('CSG') * (StaticData.CDP.get('bearing') ** 3)
+		ge = self._current_scheme.CPD.couplings * self._current_scheme.CPD.OCD * self._current_scheme.CPD.CSG * (self._current_scheme.CPD.bearing ** 3)
 		self._current_power = self._p_rv / ge
 		ConsoleService.console.print(f'Мощность = {round(self._current_power, 2)} кВт', style=ConsoleColors.MAIN)
 
 		self._w_rv = (2 * self._v) / self._d
-		rec_ge = StaticData.GR.get('CSG') * StaticData.GR.get('OCD')
+		rec_ge = self._current_scheme.GR.CSG * self._current_scheme.GR.OCD
 		self._current_freq = (30 * self._w_rv * rec_ge) / pi
 		ConsoleService.console.print(f'Частота вращения вала = {round(self._current_freq, 2)} об/мин', style=ConsoleColors.MAIN)
 
@@ -52,7 +52,7 @@ class Calculations:
 		w_em = (pi * engine_rotation_freq) / 30
 		total_gear_ratio = w_em / self._w_rv
 		ConsoleService.console.print(f'\nОбщее передаточное число = {round(total_gear_ratio, 2)}', style=ConsoleColors.MAIN)
-		closed_gear_ratio = total_gear_ratio / StaticData.GR.get('OCD')
+		closed_gear_ratio = total_gear_ratio / self._current_scheme.GR.OCD
 		ConsoleService.console.print(f'Какое-то закрытое передаточное число = {round(closed_gear_ratio, 2)}', style=ConsoleColors.MAIN)
 		required_dgr: float | None = None
 		biggest_default_dgrs_1_row = tuple(filter(lambda dgr: closed_gear_ratio <= dgr, StaticData.DGR.SSC_1_ROW))
@@ -74,9 +74,9 @@ class Calculations:
 		n4 = (30 * w4) / pi
 		#* ------------------------------------------------------------------------
 		p1 = self._current_power
-		p2 = p1 * StaticData.CDP.get("couplings") * StaticData.CDP.get('bearing')
-		p3 = p2 * StaticData.CDP.get('bearing') * StaticData.CDP.get('CSG')
-		p4 = p3 * StaticData.CDP.get('OCD') * StaticData.CDP.get('bearing')
+		p2 = p1 * self._current_scheme.CPD.couplings * self._current_scheme.CPD.bearing
+		p3 = p2 * self._current_scheme.CPD.bearing * self._current_scheme.CPD.CSG
+		p4 = p3 * self._current_scheme.CPD.OCD * self._current_scheme.CPD.bearing
 		#* ------------------------------------------------------------------------
 		t1 = p1 / w1
 		t2 = p2 / w2

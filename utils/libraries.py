@@ -2,7 +2,7 @@ import pkg_resources
 
 from config.filepaths import FILEPATHS
 
-class LibrariesService:
+class LibrariesUtil:
 	@staticmethod
 	def get_required_libraries():
 		with open(FILEPATHS.REQUIRED_LIBRARIES, 'r', encoding='utf-8') as required_libraries_file:
@@ -10,7 +10,7 @@ class LibrariesService:
 
 	@staticmethod
 	def all_required_libraries_is_installed():
-		required_libraries = LibrariesService.get_required_libraries()
+		required_libraries = LibrariesUtil.get_required_libraries()
 		installed_libraries = {pkg.key for pkg in pkg_resources.working_set}
 		skipped_libraries = required_libraries - installed_libraries
 		if len(skipped_libraries) > 0:

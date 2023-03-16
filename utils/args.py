@@ -3,7 +3,7 @@ from sys import argv
 from utils.numbers import NumbersUtil
 from services.console import ConsoleService, ConsoleColors
 
-class ArgsService:
+class ArgsUtil:
 	@staticmethod
 	def try_read():
 		failed_result = (None, None, None)
