@@ -1,16 +1,12 @@
 from math import pi
-from rich.console import Console
 from rich.table import Table
 from rich.theme import Theme
 
 from models.engine import Engine
 from services.static_data import StaticData
+from services.console import ConsoleService
 from config.console import ConsoleColors
 
-console = Console(theme=Theme({
-	'repr.number': 'yellow',
-	'repr.repr.number_complex': 'yellow',
-}))
 
 class Calculations:
 	def __init__(self, d: float, f: float, v: float):
@@ -23,12 +19,12 @@ class Calculations:
 		self._p_rv = self._f * self._v
 		ge = StaticData.CDP.get('couplings') * StaticData.CDP.get('OCD') * StaticData.CDP.get('CSG') * (StaticData.CDP.get('bearing') ** 3)
 		self._current_power = self._p_rv / ge
-		console.print(f'Мощность = {round(self._current_power, 2)}', style=ConsoleColors.MAIN)
+		ConsoleService.console.print(f'Мощность = {round(self._current_power, 2)} кВт', style=ConsoleColors.MAIN)
 
 		self._w_rv = (2 * self._v) / self._d
 		rec_ge = StaticData.GR.get('CSG') * StaticData.GR.get('OCD')
 		self._current_freq = (30 * self._w_rv * rec_ge) / pi
-		console.print(f'Частота вращения вала = {round(self._current_freq, 2)}', style=ConsoleColors.MAIN)
+		ConsoleService.console.print(f'Частота вращения вала = {round(self._current_freq, 2)} об/мин', style=ConsoleColors.MAIN)
 
 		closest_constant_freq = min(
 			shaft_freq for shaft_freq in StaticData.engine_list.get_constant_shaft_freqs() if (shaft_freq - self._current_freq >= 0)
@@ -43,31 +39,21 @@ class Calculations:
 			StaticData.engine_list.get_engine_list(),
 		))[0]
 
-		require_engine_table = Table(title='Необходимый двигатель')
-		require_engine_table.add_column("Название", justify='center')
-		require_engine_table.add_column("Мощность", style=ConsoleColors.SUCCESS, justify='center')
-		require_engine_table.add_column("Частота вращения", justify='center')
-		require_engine_table.add_column("Частота вращения вала", style=ConsoleColors.SUCCESS, justify='center')
-		require_engine_table.add_column("Tmax / Tmin", justify='center')
-
-		require_engine_table.add_row(
-			self._required_engine.title,
-			str(self._required_engine.power),
-			str(self._required_engine.rotation_freq),
-			str(self._required_engine.shaft_freq),
-			str(self._required_engine.delta_t),
+		ConsoleService.print_engine(
+			engine=self._required_engine,
+			table_name="Необходимый двигатель",
+			power_style=ConsoleColors.SUCCESS,
+			shaft_freq_style=ConsoleColors.SUCCESS,
 		)
-
-		console.print(require_engine_table)
 
 
 	def kinematic_drive(self):
 		engine_rotation_freq = self._required_engine.rotation_freq
 		w_em = (pi * engine_rotation_freq) / 30
 		total_gear_ratio = w_em / self._w_rv
-		console.print(f'\nОбщее передаточное число = {round(total_gear_ratio, 2)}', style=ConsoleColors.MAIN)
+		ConsoleService.console.print(f'\nОбщее передаточное число = {round(total_gear_ratio, 2)}', style=ConsoleColors.MAIN)
 		closed_gear_ratio = total_gear_ratio / StaticData.GR.get('OCD')
-		console.print(f'Какое-то закрытое передаточное число = {round(closed_gear_ratio, 2)}', style=ConsoleColors.MAIN)
+		ConsoleService.console.print(f'Какое-то закрытое передаточное число = {round(closed_gear_ratio, 2)}', style=ConsoleColors.MAIN)
 		required_dgr: float | None = None
 		biggest_default_dgrs_1_row = tuple(filter(lambda dgr: closed_gear_ratio <= dgr, StaticData.DGR.SSC_1_ROW))
 		if len(biggest_default_dgrs_1_row) > 0:
@@ -75,7 +61,7 @@ class Calculations:
 		else:
 			required_dgr = tuple(filter(lambda dgr: closed_gear_ratio <= dgr, StaticData.DGR.SSC_2_ROW))[0]
 		gear_ratio_OCD = total_gear_ratio / required_dgr
-		console.print(f'Открытое чего-то там передаточное число = {round(gear_ratio_OCD, 2)}', style=ConsoleColors.MAIN)
+		ConsoleService.console.print(f'Открытое чего-то там передаточное число = {round(gear_ratio_OCD, 2)}', style=ConsoleColors.MAIN)
 		#* ------------------------------------------------------------------------
 		w1 = w_em
 		w2 = w1
@@ -109,4 +95,4 @@ class Calculations:
 		table.add_row("2", str(round(w2, 2)), str(round(n2, 2)), str(round(p2, 2)), str(round(t2, 2)))
 		table.add_row("3", str(round(w3, 2)), str(round(n3, 2)), str(round(p3, 2)), str(round(t3, 2)), f"u* з.п = {round(required_dgr, 2)}")
 		table.add_row("4 (раб.вал)", str(round(w4, 2)), str(round(n4, 2)), str(round(p4, 2)), str(round(t4, 2)))
-		console.print(table)
+		ConsoleService.console.print(table)

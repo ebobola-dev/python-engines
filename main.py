@@ -3,22 +3,17 @@ from services.libraries import LibrariesService
 if not LibrariesService.all_required_libraries_is_installed():
 	exit()
 
-from rich.console import Console
-from rich.theme import Theme
 
 from config.filepaths import FILEPATHS
 from config.console import ConsoleColors
+from services.args import ArgsService
 from services.static_data import StaticData
 from services.calculations import Calculations
-
-
-console = Console(theme=Theme({
-	'repr.number': 'yellow',
-	'repr.repr.number_complex': 'yellow',
-}))
+from services.console import ConsoleService
 
 def main():
-	console.print("\n------- Программа запущена только для 10 схемы -------\n", style=ConsoleColors.WARNING)
+	ConsoleService.initialize()
+	ConsoleService.console.print("\n------- Программа запущена только для 10 схемы -------\n", style=ConsoleColors.WARNING)
 	StaticData.initialize(
 		scheme_data_filepath=FILEPATHS.SCHEME_DATA,
 		engine_list_filepath=FILEPATHS.ENGINE_LIST,
@@ -26,7 +21,11 @@ def main():
 		default_gear_ratios=FILEPATHS.DEFAULT_GEAR_RATIOS,
 	)
 	print()
-	d, f, v = map(float, input("Введите диаметр звёздочки, тяговое усиление на цепи и скорость: ").split())
+	d, f, v = ArgsService.try_read()
+	if d is not None:
+		ConsoleService.console.print(f"Обнаружены значения из параметров запуска: {d} kH, {f} м/с, {v} м", style=ConsoleColors.SUCCESS)
+	else:
+		d, f, v = map(float, input("Введите диаметр звёздочки, тяговое усиление на цепи и скорость: ").split())
 	print()
 	calculations = Calculations(d, f, v)
 	calculations.find_required_engine()

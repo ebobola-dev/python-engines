@@ -1,14 +1,14 @@
-from time import sleep
 from enum import Enum
+from time import sleep
+from rich.progress import *
+from rich.table import Table, box
 
 from config.console import ConsoleColors, ProgressSleepTimes
 from utils.json_rw import JsonUtil
 from models.engine_list import EngineList
-from rich.console import Console
-from rich.progress import *
-from rich.table import Table, box
 
-console = Console()
+from services.console import ConsoleService
+
 
 class InitializationStatus(Enum):
 	NotInitialized = 1
@@ -38,13 +38,13 @@ class StaticData:
 			engine_constant_values_filepath: str,
 			default_gear_ratios: str,
 		):
-		console.print(" ---------------- Инициализация ---------------- ", style=ConsoleColors.MAIN)
+		ConsoleService.console.print(" ---------------- Инициализация ---------------- ", style=ConsoleColors.MAIN)
 		with Progress(
 			TextColumn("[blue]{task.percentage:>3.0f}%"),
 			BarColumn(),
 			TextColumn("[blue]{task.description}"),
 			refresh_per_second=60,
-			console=console,
+			console=ConsoleService.console,
 			transient=True,
 		) as progress:
 			read_engines_task = progress.add_task(
@@ -71,13 +71,13 @@ class StaticData:
 					constant_values_filepath=engine_constant_values_filepath,
 				)
 			except Exception as engine_init_error:
-				console.print(f'Произошла ошибка при чтении двигателей из файла: {engine_init_error}', style=ConsoleColors.ERROR)
+				ConsoleService.console.print(f'Произошла ошибка при чтении двигателей из файла: {engine_init_error}', style=ConsoleColors.ERROR)
 				StaticData.initialization_status = InitializationStatus.InitializedWithCriticalProblem
 				return
 			for _ in range(50):
 				progress.update(read_engines_task, advance=1)
 				sleep(ProgressSleepTimes.ENGINE)
-			console.print(f'Успешно прочитано {StaticData.engine_list.get_engine_list_len()} двигателей', style=ConsoleColors.SUCCESS)
+			ConsoleService.console.print(f'Успешно прочитано {StaticData.engine_list.get_engine_list_len()} двигателей', style=ConsoleColors.SUCCESS)
 
 			#* -------------------------------------------------------
 			#? Чтение данных схем
@@ -89,13 +89,13 @@ class StaticData:
 				StaticData.CDP: dict = scheme_10_data.get('CPD')
 				StaticData.GR: dict = scheme_10_data.get('GR')
 			except Exception as scheme_init_error:
-				console.print(f'Произошла ошибка при чтении данных схем из файла: {scheme_init_error}', style=ConsoleColors.ERROR)
+				ConsoleService.console.print(f'Произошла ошибка при чтении данных схем из файла: {scheme_init_error}', style=ConsoleColors.ERROR)
 				StaticData.initialization_status = InitializationStatus.InitializedWithCriticalProblem
 				return
 			for _ in range(50):
 				progress.update(read_scheme_data_task, advance=1)
 				sleep(ProgressSleepTimes.SCHEME)
-			console.print(f'Данные схем успешно прочитаны', style=ConsoleColors.SUCCESS)
+			ConsoleService.console.print(f'Данные схем успешно прочитаны', style=ConsoleColors.SUCCESS)
 
 			scheme_table = Table(title="Данных схем")
 			scheme_table.add_column('№ cхемы', justify='center')
@@ -114,7 +114,7 @@ class StaticData:
 				str(StaticData.GR.get('CSG')),
 				str(StaticData.GR.get('OCD')),
 			)
-			console.print(scheme_table)
+			ConsoleService.console.print(scheme_table)
 
 			#* -------------------------------------------------------
 			#? Чтение стандартных передаточных чисел
@@ -124,22 +124,22 @@ class StaticData:
 			try:
 				StaticData.DGR = DefaultGearRatios(json_view=JsonUtil.read(filepath=default_gear_ratios))
 			except Exception as dgr_init_error:
-				console.print(f'Произошла ошибка при чтении данных схем из файла: {dgr_init_error}', style=ConsoleColors.ERROR)
+				ConsoleService.console.print(f'Произошла ошибка при чтении данных схем из файла: {dgr_init_error}', style=ConsoleColors.ERROR)
 				StaticData.initialization_status = InitializationStatus.InitializedWithCriticalProblem
 				return
 			for _ in range(50):
 				progress.update(read_dgr_task, advance=1)
 				sleep(ProgressSleepTimes.DGR)
-			console.print(f'Стандартные передаточные числа успешно прочитаны:', style=ConsoleColors.SUCCESS)
+			ConsoleService.console.print(f'Стандартные передаточные числа успешно прочитаны:', style=ConsoleColors.SUCCESS)
 
 			dgr_table_1 = Table(title="Одноступенчатый цилиндрический", box=box.SQUARE)
 			dgr_table_1.add_column("1-й ряд", justify='center')
 			for dgr_1_row_value in StaticData.DGR.SSC_1_ROW:
 				dgr_table_1.add_column(str(dgr_1_row_value), justify='center')
 			dgr_table_1.add_row("2-й ряд", *map(lambda value: str(value), StaticData.DGR.SSC_2_ROW))
-			console.print(dgr_table_1)
+			ConsoleService.console.print(dgr_table_1)
 
 			#* -------------------------------------------------------
 
-			console.print(" ----------- Инициализация завершена ----------- ", style=ConsoleColors.MAIN)
+			ConsoleService.console.print(" ----------- Инициализация завершена ----------- ", style=ConsoleColors.MAIN)
 
