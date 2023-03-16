@@ -2,6 +2,7 @@ from math import pi
 from rich.table import Table
 
 from models.engine import Engine
+from models.scheme_data import Scheme
 from services.static_data import StaticData
 from services.console import ConsoleService
 from config.console import ConsoleColors
@@ -9,10 +10,11 @@ from config.console import ConsoleColors
 
 class Calculations:
 	def __init__(self, scheme_number: int, d: float, f: float, v: float):
-		self._current_scheme = tuple(filter(lambda scheme: scheme.number == scheme_number, StaticData.schemes))[0]
 		self._d = d
 		self._f = f
 		self._v = v
+		self._current_scheme: Scheme = tuple(filter(lambda scheme: scheme.number == scheme_number, StaticData.schemes))[0]
+		self._dgr = StaticData.DGRS.get_dgr_by_str_type(self._current_scheme.dgr_type)
 
 	#? Подбираем электродвигатель
 	def find_required_engine(self):
@@ -55,11 +57,15 @@ class Calculations:
 		closed_gear_ratio = total_gear_ratio / self._current_scheme.GR.OCD
 		ConsoleService.console.print(f'Какое-то закрытое передаточное число = {round(closed_gear_ratio, 2)}', style=ConsoleColors.MAIN)
 		required_dgr: float | None = None
-		biggest_default_dgrs_1_row = tuple(filter(lambda dgr: closed_gear_ratio <= dgr, StaticData.DGR.SSC_1_ROW))
+		biggest_default_dgrs_1_row = tuple(filter(lambda dgr: closed_gear_ratio <= dgr, self._dgr.row_1))
 		if len(biggest_default_dgrs_1_row) > 0:
 			required_dgr = biggest_default_dgrs_1_row[0]
+		elif self._dgr.row_1 is not None:
+			required_dgr = tuple(filter(lambda dgr: closed_gear_ratio <= dgr, self._dgr.row_2))[0]
 		else:
-			required_dgr = tuple(filter(lambda dgr: closed_gear_ratio <= dgr, StaticData.DGR.SSC_2_ROW))[0]
+			#TODO Доделать
+			ConsoleService.console.print("ГДЕ Я?", style=ConsoleColors.ERROR)
+			return
 		gear_ratio_OCD = total_gear_ratio / required_dgr
 		ConsoleService.console.print(f'Открытое чего-то там передаточное число = {round(gear_ratio_OCD, 2)}', style=ConsoleColors.MAIN)
 		#* ------------------------------------------------------------------------

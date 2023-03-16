@@ -1,5 +1,6 @@
 [{
 	"number": 10,
+	"dgr_type": "cylindrical",
 	"CPD": {
 		"couplings": 1.0,
 		"OCD": 0.91,

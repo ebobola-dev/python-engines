@@ -8,3 +8,4 @@ class ConsoleColors:
     ERROR = 'red'
     SUCCESS = 'green'
     MAIN = 'blue'
+    DIGIT = 'yellow'

@@ -18,7 +18,7 @@ def main():
 		scheme_data_filepath=FILEPATHS.SCHEME_DATA,
 		engine_list_filepath=FILEPATHS.ENGINE_LIST,
 		engine_constant_values_filepath=FILEPATHS.ENGINES_CONSTANT_VALUES,
-		default_gear_ratios=FILEPATHS.DEFAULT_GEAR_RATIOS,
+		default_gear_ratios_filepath=FILEPATHS.DEFAULT_GEAR_RATIOS,
 	)
 	print()
 	d, f, v = ArgsUtil.try_read()

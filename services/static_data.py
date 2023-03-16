@@ -1,12 +1,14 @@
 from enum import Enum
 from time import sleep
 from rich.progress import *
-from rich.table import Table, box
+from rich.table import Table
+from traceback import format_exc
 
 from config.console import ConsoleColors, ProgressSleepTimes
 from utils.json_rw import JsonUtil
 from models.engine_list import EngineList
 from models.scheme_data import Scheme
+from models.default_gear_ratios import DefaultGearRatios
 
 from services.console import ConsoleService
 
@@ -17,26 +19,18 @@ class InitializationStatus(Enum):
 	InitializedWithCriticalProblem = 3
 	SuccessfullyInitialized = 4
 
-class DefaultGearRatios:
-	def __init__(
-		self,
-		json_view: dict,
-	):
-		self.SSC_1_ROW: tuple = tuple(json_view.get('ssc'))[0]
-		self.SSC_2_ROW: tuple = tuple(json_view.get('ssc'))[1]
-
 class StaticData:
 	initialization_status: InitializationStatus = InitializationStatus.NotInitialized
 	engine_list: EngineList | None = None
 	schemes: tuple[Scheme] | None = None
-	DGR: DefaultGearRatios | None = None
+	DGRS: DefaultGearRatios | None = None
 
 	@staticmethod
 	def initialize(
 			scheme_data_filepath: str,
 			engine_list_filepath: str,
 			engine_constant_values_filepath: str,
-			default_gear_ratios: str,
+			default_gear_ratios_filepath: str,
 		):
 		ConsoleService.console.print(" ---------------- Инициализация ---------------- ", style=ConsoleColors.MAIN)
 		with Progress(
@@ -56,7 +50,7 @@ class StaticData:
 				total=100,
 			)
 			read_dgr_task = progress.add_task(
-				f"Чтение таблиц ({default_gear_ratios})",
+				f"Чтение таблиц ({default_gear_ratios_filepath})",
 				total=100,
 			)
 
@@ -77,7 +71,7 @@ class StaticData:
 			for _ in range(50):
 				progress.update(read_engines_task, advance=1)
 				sleep(ProgressSleepTimes.ENGINE)
-			ConsoleService.console.print(f'Успешно прочитано {StaticData.engine_list.get_engine_list_len()} двигателей', style=ConsoleColors.SUCCESS)
+			ConsoleService.console.print(f'Успешно прочитано {StaticData.engine_list.get_engine_list_len()} двигатель(ей)', style=ConsoleColors.SUCCESS)
 
 			#* -------------------------------------------------------
 			#? Чтение данных схем
@@ -96,7 +90,7 @@ class StaticData:
 			for _ in range(50):
 				progress.update(read_scheme_data_task, advance=1)
 				sleep(ProgressSleepTimes.SCHEME)
-			ConsoleService.console.print(f'Данные схем успешно прочитаны', style=ConsoleColors.SUCCESS)
+			ConsoleService.console.print(f'Успешно прочитаны данные {len(StaticData.schemes)} схем(ы)', style=ConsoleColors.SUCCESS)
 
 			scheme_table = Table(title="Данных схем")
 			scheme_table.add_column('№ cхемы', justify='center')
@@ -125,9 +119,9 @@ class StaticData:
 				progress.update(read_dgr_task, advance=1)
 				sleep(0.01)
 			try:
-				StaticData.DGR = DefaultGearRatios(json_view=JsonUtil.read(filepath=default_gear_ratios))
+				StaticData.DGRS = DefaultGearRatios.from_json(JsonUtil.read(filepath=default_gear_ratios_filepath))
 			except Exception as dgr_init_error:
-				ConsoleService.console.print(f'Произошла ошибка при чтении данных схем из файла: {dgr_init_error}', style=ConsoleColors.ERROR)
+				ConsoleService.console.print(f'Произошла ошибка при чтении стандартных передаточных чисел: {dgr_init_error}', style=ConsoleColors.ERROR)
 				StaticData.initialization_status = InitializationStatus.InitializedWithCriticalProblem
 				return
 			for _ in range(50):
@@ -135,12 +129,9 @@ class StaticData:
 				sleep(ProgressSleepTimes.DGR)
 			ConsoleService.console.print(f'Стандартные передаточные числа успешно прочитаны:', style=ConsoleColors.SUCCESS)
 
-			dgr_table_1 = Table(title="Одноступенчатый цилиндрический", box=box.SQUARE)
-			dgr_table_1.add_column("1-й ряд", justify='center')
-			for dgr_1_row_value in StaticData.DGR.SSC_1_ROW:
-				dgr_table_1.add_column(str(dgr_1_row_value), justify='center')
-			dgr_table_1.add_row("2-й ряд", *map(lambda value: str(value), StaticData.DGR.SSC_2_ROW))
-			ConsoleService.console.print(dgr_table_1)
+			ConsoleService.print_dgr(StaticData.DGRS.cylindrical)
+			ConsoleService.print_dgr(StaticData.DGRS.conical)
+			ConsoleService.print_dgr(StaticData.DGRS.worm)
 
 			#* -------------------------------------------------------
 

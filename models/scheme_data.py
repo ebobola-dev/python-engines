@@ -1,3 +1,5 @@
+from models.default_gear_ratios import DGR
+
 class CPD:
 	def __init__(
 			self,
@@ -26,10 +28,12 @@ class Scheme:
 			number: int,
 			CPD: CPD,
 			GR: GR,
+			dgr_type: str,
 		):
 		self.number = number
 		self.CPD = CPD
 		self.GR = GR
+		self.dgr_type = dgr_type
 
 	@staticmethod
 	def from_json(scheme_data_json: dict):
@@ -37,4 +41,5 @@ class Scheme:
 			number=scheme_data_json.get('number'),
 			CPD=CPD(**scheme_data_json.get("CPD")),
 			GR=GR(**scheme_data_json.get("GR")),
+			dgr_type=scheme_data_json.get("dgr_type"),
 		)
